@@ -1,12 +1,10 @@
 import yfinance as yf
 import pandas as pd
 import requests
-import pandas as pd
 import os
-
 #J5EH6AKPA77SN4WS
 stock_name = input("Enter the stock symbol (e.g., IBM): ").upper()
-apikey = "demo"
+apikey = "J5EH6AKPA77SN4WS"
 url = (
     "https://www.alphavantage.co/query?function=INCOME_STATEMENT&symbol="
     + stock_name
@@ -46,26 +44,24 @@ for report in data["quarterlyReports"]:
 df = pd.DataFrame(records)
 append_to_excel("temp.xlsx", df)
 
-
-
 # Step 1: Load the existing Excel file
 file_path = "temp.xlsx"  # Replace with your actual file path
 
 data = pd.read_excel(file_path)
 
 # Step 2: Set up to retrieve stock history
-tickers = yf.Tickers(stock_name)
+tickers = yf.Ticker(stock_name)
 
 # Initialize a list to store close values
 close_values = []
 
 # Step 3: Iterate through the DataFrame rows
 for index, row in data.iterrows():
-    stock_name = row["Stock Name"]
+#    stock_name = row["Stock Name"]
     date = pd.to_datetime(row["Date"])  # Ensure date is in datetime format
 
     # Get the historical data for the specific stock
-    history = tickers.tickers[stock_name].history(period="10y")
+    history = tickers.history(period="10y")
     history.index =  pd.to_datetime(history.index).tz_localize(None)
     history.to_excel(os.path.join("history",stock_name + "history.xlsx"), index=True)
     # Filter the historical data for the specified date
@@ -90,5 +86,6 @@ for index, row in data.iterrows():
 data["Close"] = close_values
 
 # Step 5: Save the updated DataFrame back to Excel
-data.to_excel("allstocks.xlsx", index=False)
+append_to_excel("allstocks.xlsx", data)
 data.to_excel(os.path.join("stocks",stock_name + ".xlsx"), index=False)
+os.remove('temp.xlsx')
