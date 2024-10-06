@@ -2,9 +2,9 @@ import yfinance as yf
 import pandas as pd
 import requests
 import os
-#J5EH6AKPA77SN4WS
+
 stock_name = input("Enter the stock symbol (e.g., IBM): ").upper()
-apikey = "J5EH6AKPA77SN4WS"
+apikey = "demo"
 url = (
     "https://www.alphavantage.co/query?function=INCOME_STATEMENT&symbol="
     + stock_name
